@@ -2,9 +2,9 @@
 
 namespace ZlotoLotto.Views
 {
-	public partial class MainPage : ContentPage
+	public partial class CreateAccountPage : ContentPage
 	{
-		public MainPage()
+		public CreateAccountPage()
 		{
 			this.InitializeComponent();
 		}

@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ZlotoLotto.Views.CreateAccountPage"
+             Title="{Binding Title}">
+
+    <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+        <Entry Placeholder="Select Password" Text="{Binding NewAccountPassword}" IsPassword="True" />
+        <Button Text="Create New Account" Command="{Binding CreateAccountCommand}" />
+
+        <Entry Placeholder="Enter your 12 word phrase" Text="{Binding Mnemonic}" />
+        <Entry Placeholder="Or enter your private key" Text="{Binding PrivateKey}" />
+        <Entry Placeholder="Select Password" Text="{Binding RestoreAccountPassword}" IsPassword="True" />
+        <Button Text="Restore Account" Command="{Binding RestoreAccountCommand}" />
+    </StackLayout>
+</ContentPage>
+    

@@ -1,36 +1,35 @@
 ﻿using Prism;
 using Prism.Ioc;
-using ZlotoLotto.ViewModels;
 using ZlotoLotto.Views;
-using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using Prism.Autofac;
+using Xamarin.Forms;
+using ZlotoLotto.Services;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace ZlotoLotto
 {
     public partial class App : PrismApplication
     {
-        /* 
-         * The Xamarin Forms XAML Previewer in Visual Studio uses System.Activator.CreateInstance.
-         * This imposes a limitation in which the App class must have a default constructor. 
-         * App(IPlatformInitializer initializer = null) cannot be handled by the Activator.
-         */
         public App() : this(null) { }
 
         public App(IPlatformInitializer initializer) : base(initializer) { }
 
         protected override async void OnInitialized()
         {
-            InitializeComponent();
-
-            await NavigationService.NavigateAsync("NavigationPage/MainPage");
+            this.InitializeComponent();
+            var startPage = Settings.KeyStore == null ? nameof(CreateAccountPage) : nameof(UnlockAccountPage);
+            await this.NavigationService.NavigateAsync($"{nameof(NavigationPage)}/{startPage}");
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             containerRegistry.RegisterForNavigation<NavigationPage>();
+            containerRegistry.RegisterForNavigation<CreateAccountPage>();
+            containerRegistry.RegisterForNavigation<UnlockAccountPage>();
             containerRegistry.RegisterForNavigation<MainPage>();
+
+            containerRegistry.RegisterSingleton<IAccountService, AccountService>();
         }
     }
 }
