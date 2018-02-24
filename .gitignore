@@ -1,0 +1,14 @@
+*.suo
+*.[Cc]lass
+*.[Cc]ache
+*.dat
+*.user
+*.DotSettings
+
+.vs/
+packages/
+.idea/
+out/
+[Bb]in/
+[Oo]bj/
+TestResults/
