@@ -30,6 +30,7 @@ namespace ZlotoLotto
             containerRegistry.RegisterForNavigation<MainPage>();
 
             containerRegistry.RegisterSingleton<IAccountService, AccountService>();
+            containerRegistry.RegisterSingleton<IWeb3Service, Web3Service>();
         }
     }
 }

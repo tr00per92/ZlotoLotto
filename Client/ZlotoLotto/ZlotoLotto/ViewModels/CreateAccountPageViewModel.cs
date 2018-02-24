@@ -9,11 +9,13 @@ namespace ZlotoLotto.ViewModels
     public class CreateAccountPageViewModel : ViewModelBase
     {
         private readonly IAccountService accountService;
+        private readonly IWeb3Service web3Service;
 
-        public CreateAccountPageViewModel(INavigationService navigationService, IAccountService accountService) 
+        public CreateAccountPageViewModel(INavigationService navigationService, IAccountService accountService, IWeb3Service web3Service) 
             : base (navigationService)
         {
             this.accountService = accountService;
+            this.web3Service = web3Service;
             this.Title = "Create Account";
             this.CreateAccountCommand = new DelegateCommand(this.CreateAccount);
             this.RestoreAccountCommand = new DelegateCommand(this.RestoreAccount);
@@ -50,12 +52,13 @@ namespace ZlotoLotto.ViewModels
         public ICommand CreateAccountCommand { get; set; }
         private async void CreateAccount()
         {
-            var newAccount = this.accountService.CreateNew(this.NewAccountPassword);
+            var newAccountData = this.accountService.CreateNew(this.NewAccountPassword);
+            this.web3Service.Initialize(this.accountService.Account);
             await this.NavigationService.NavigateToMainAsync();
         }
 
         public ICommand RestoreAccountCommand { get; set; }
-        private void RestoreAccount()
+        private async void RestoreAccount()
         {
             if (!string.IsNullOrEmpty(this.PrivateKey))
             {
@@ -65,6 +68,9 @@ namespace ZlotoLotto.ViewModels
             {
                 this.accountService.RestoreAccountByMnemonic(this.Mnemonic, this.RestoreAccountPassword);
             }
+
+            this.web3Service.Initialize(this.accountService.Account);
+            await this.NavigationService.NavigateToMainAsync();
         }
     }
 }
