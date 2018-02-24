@@ -49,7 +49,7 @@ namespace ZlotoLotto.ViewModels
             set => this.SetProperty(ref this.mnemonic, value);
         }
 
-        public ICommand CreateAccountCommand { get; set; }
+        public ICommand CreateAccountCommand { get; }
         private async void CreateAccount()
         {
             var newAccountData = this.accountService.CreateNew(this.NewAccountPassword);
@@ -57,7 +57,7 @@ namespace ZlotoLotto.ViewModels
             await this.NavigationService.NavigateToMainAsync();
         }
 
-        public ICommand RestoreAccountCommand { get; set; }
+        public ICommand RestoreAccountCommand { get; }
         private async void RestoreAccount()
         {
             if (!string.IsNullOrEmpty(this.PrivateKey))

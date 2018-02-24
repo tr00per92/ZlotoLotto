@@ -6,6 +6,8 @@ namespace ZlotoLotto.Services
 {
     public interface IWeb3Service
     {
+        string Address { get; }
+
         void Initialize(IAccount account);
 
         Task<decimal> GetBalance();

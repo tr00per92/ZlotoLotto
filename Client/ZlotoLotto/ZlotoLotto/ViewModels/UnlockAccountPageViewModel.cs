@@ -26,7 +26,7 @@ namespace ZlotoLotto.ViewModels
             set => this.SetProperty(ref this.accountPassword, value);
         }
 
-        public ICommand UnlockAccountCommand { get; set; }
+        public ICommand UnlockAccountCommand { get; }
         private async void UnlockAccount()
         {
             this.accountService.UnlockAccount(this.accountPassword);

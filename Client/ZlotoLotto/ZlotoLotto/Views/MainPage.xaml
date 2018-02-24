@@ -5,6 +5,21 @@
              Title="{Binding Title}">
 
     <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+        <Button Text="Refresh" Command="{Binding RefreshCommand}" />
+        <Label Text="Your Ropsten address is: " />
+        <Label Text="{Binding Address}" />
+        <Button Text="Open address in browser" Command="{Binding OpenAddressCommand}" />
+        <Label Text="{Binding Balance, StringFormat='Your ether balance is {0:0.00}'}" />
+        <Label Text="{Binding TokensCount, StringFormat='Your have {0} zloto lotto tickets'}" />
+        <Button Text="Scratch ticket" Command="{Binding ScratchCommand}" />
+        <Label Text="{Binding CurrentPrice, StringFormat='Current token price is {0}'}" />
+        <Label Text="Buy tickets:" />
+        <Entry Placeholder="Amount" Keyboard="Numeric" Text="{Binding BuyTokensCount}" />
+        <Label Text="{Binding BuyTotalPrice, StringFormat='Total price: {0} ether'}" />
+        <Button Text="Buy" Command="{Binding BuyTokensCommand}" />
+        <Label Text="Sell tickets:" />
+        <Entry Placeholder="Amount" Keyboard="Numeric" Text="{Binding SellTokensCount}" />
+        <Button Text="Sell" Command="{Binding SellTokensCommand}" />
     </StackLayout>
 </ContentPage>
     
