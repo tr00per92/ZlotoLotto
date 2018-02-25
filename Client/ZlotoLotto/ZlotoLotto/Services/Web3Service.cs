@@ -52,7 +52,7 @@ namespace ZlotoLotto.Services
             var buyFunction = this.contract.GetFunction("buyTokens");
             var value = new HexBigInteger(Web3.Convert.ToWei(totalCost));
             var gas = await buyFunction.EstimateGasAsync(this.Address, null, value, count);
-            await buyFunction.SendTransactionAsync(this.GetTransactionInput(gas, value), count);
+            await buyFunction.SendTransactionAndWaitForReceiptAsync(this.GetTransactionInput(gas, value), null, count);
         }
 
         public async Task SellTokens(int count)
@@ -60,7 +60,7 @@ namespace ZlotoLotto.Services
             this.EnsureInitialized();
             var sellFunction = this.contract.GetFunction("sellTokens");
             var gas = await sellFunction.EstimateGasAsync(this.Address, null, null, count);
-            await sellFunction.SendTransactionAsync(this.GetTransactionInput(gas), count);
+            await sellFunction.SendTransactionAndWaitForReceiptAsync(this.GetTransactionInput(gas), null, count);
         }
 
         public async Task<ScratchResult> ScratchToken()

@@ -28,6 +28,7 @@ namespace ZlotoLotto
             containerRegistry.RegisterForNavigation<CreateAccountPage>();
             containerRegistry.RegisterForNavigation<UnlockAccountPage>();
             containerRegistry.RegisterForNavigation<MainPage>();
+            containerRegistry.RegisterForNavigation<ExchangeTokensPage>();
 
             containerRegistry.RegisterSingleton<IAccountService, AccountService>();
             containerRegistry.RegisterSingleton<IWeb3Service, Web3Service>();

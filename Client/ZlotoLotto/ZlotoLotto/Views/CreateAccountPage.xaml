@@ -7,7 +7,8 @@
     <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
         <Entry Placeholder="Select Password" Text="{Binding NewAccountPassword}" IsPassword="True" />
         <Button Text="Create New Account" Command="{Binding CreateAccountCommand}" />
-
+        <BoxView />
+        <BoxView />
         <Entry Placeholder="Enter your 12 word phrase" Text="{Binding Mnemonic}" />
         <Entry Placeholder="Or enter your private key" Text="{Binding PrivateKey}" />
         <Entry Placeholder="Select Password" Text="{Binding RestoreAccountPassword}" IsPassword="True" />

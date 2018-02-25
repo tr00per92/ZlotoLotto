@@ -1,7 +1,10 @@
-﻿using System.Windows.Input;
+﻿using System;
+using System.Windows.Input;
 using Prism.Commands;
 using Prism.Navigation;
+using Xamarin.Forms;
 using ZlotoLotto.Services;
+using ZlotoLotto.Views;
 
 namespace ZlotoLotto.ViewModels
 {
@@ -9,40 +12,35 @@ namespace ZlotoLotto.ViewModels
     {
         private readonly IWeb3Service web3Service;
 
-        public MainPageViewModel(INavigationService navigationService, IWeb3Service web3Service, IAccountService accountService)
+        public MainPageViewModel(INavigationService navigationService, IWeb3Service web3Service)
             : base(navigationService)
         {
             this.web3Service = web3Service;
-            this.Title = "Welcome to Zloto Lotto";
+            this.Title = "Zloto Lotto";
             this.Address = this.web3Service.Address;
-            this.RefreshCommand = new DelegateCommand(this.Refresh);
             this.ScratchCommand = new DelegateCommand(this.Scratch);
-            this.BuyTokensCommand = new DelegateCommand(this.BuyTokens);
-            this.SellTokensCommand = new DelegateCommand(this.SellTokens);
-            this.Refresh();
-        }
-
-        public ICommand RefreshCommand { get; }
-        private void Refresh()
-        {
-            this.UpdateBalance();
+            this.OpenAddressCommand = new DelegateCommand(this.OpeAddress);
+            this.GoToExchangeCommand = new DelegateCommand(this.GoToExchange);
             this.UpdateTokensCount();
-            this.UpdateCurrenPrice();
         }
 
         public ICommand ScratchCommand { get; }
-        public void Scratch()
+        private async void Scratch()
         {
+            var result = await this.web3Service.ScratchToken();
+            this.UpdateTokensCount();
         }
 
-        public ICommand BuyTokensCommand { get; }
-        public void BuyTokens()
+        public ICommand OpenAddressCommand { get; }
+        private void OpeAddress()
         {
+            Device.OpenUri(new Uri("https://ropsten.etherscan.io/address/" + this.Address));
         }
 
-        public ICommand SellTokensCommand { get; }
-        public void SellTokens()
+        public ICommand GoToExchangeCommand { get; }
+        private async void GoToExchange()
         {
+            await this.NavigationService.NavigateAsync(nameof(ExchangeTokensPage));
         }
 
         private string address;
@@ -50,17 +48,6 @@ namespace ZlotoLotto.ViewModels
         {
             get => this.address;
             set => this.SetProperty(ref this.address, value);
-        }
-
-        private decimal balance;
-        public decimal Balance
-        {
-            get => this.balance;
-            set => this.SetProperty(ref this.balance, value);
-        }
-        private async void UpdateBalance()
-        {
-            this.Balance = await this.web3Service.GetBalance();
         }
 
         private int tokensCount;
@@ -72,36 +59,6 @@ namespace ZlotoLotto.ViewModels
         private async void UpdateTokensCount()
         {
             this.TokensCount = await this.web3Service.GetTokensCount();
-        }
-
-        private decimal currentPrice;
-        public decimal CurrentPrice
-        {
-            get => this.currentPrice;
-            set => this.SetProperty(ref this.currentPrice, value);
-        }
-        private async void UpdateCurrenPrice()
-        {
-            this.CurrentPrice = await this.web3Service.GetCurrentPrice();
-        }
-
-        private int buyTokensCount;
-        public int BuyTokensCount
-        {
-            get => this.buyTokensCount;
-            set
-            {
-                this.SetProperty(ref this.buyTokensCount, value);
-                this.RaisePropertyChanged(nameof(this.BuyTotalPrice));
-            }
-        }
-        public decimal BuyTotalPrice => this.BuyTokensCount * this.CurrentPrice;
-
-        private int sellTokensCount;
-        public int SellTokensCount
-        {
-            get => this.sellTokensCount;
-            set => this.SetProperty(ref this.sellTokensCount, value);
         }
     }
 }

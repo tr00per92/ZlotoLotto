@@ -16,6 +16,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="Views\ExchangeTokensPage.xaml.cs">
+	    <DependentUpon>ExchangeTokensPage.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="Views\UnlockAccountPage.xaml.cs">
 	    <DependentUpon>UnlockAccountPage.xaml</DependentUpon>
 	  </Compile>
