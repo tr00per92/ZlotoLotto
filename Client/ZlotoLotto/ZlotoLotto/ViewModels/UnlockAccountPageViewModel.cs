@@ -1,4 +1,5 @@
-﻿using System.Windows.Input;
+﻿using System;
+using System.Windows.Input;
 using Prism.Commands;
 using Prism.Navigation;
 using ZlotoLotto.Services;
@@ -26,12 +27,26 @@ namespace ZlotoLotto.ViewModels
             set => this.SetProperty(ref this.accountPassword, value);
         }
 
+        private bool passwordError;
+        public bool PasswordError
+        {
+            get => this.passwordError;
+            set => this.SetProperty(ref this.passwordError, value);
+        }
+
         public ICommand UnlockAccountCommand { get; }
         private async void UnlockAccount()
         {
-            this.accountService.UnlockAccount(this.accountPassword);
-            this.web3Service.Initialize(this.accountService.Account);
-            await this.NavigationService.NavigateToMainAsync();
+            try
+            {
+                this.accountService.UnlockAccount(this.accountPassword);
+                this.web3Service.Initialize(this.accountService.Account);
+                await this.NavigationService.NavigateToMainAsync();
+            }
+            catch
+            {
+                this.PasswordError = true;
+            }            
         }
     }
 }

@@ -49,6 +49,13 @@ namespace ZlotoLotto.ViewModels
             set => this.SetProperty(ref this.mnemonic, value);
         }
 
+        private string restoreError;
+        public string RestoreError
+        {
+            get => this.restoreError;
+            set => this.SetProperty(ref this.restoreError, value);
+        }
+
         public ICommand CreateAccountCommand { get; }
         private async void CreateAccount()
         {
@@ -60,17 +67,40 @@ namespace ZlotoLotto.ViewModels
         public ICommand RestoreAccountCommand { get; }
         private async void RestoreAccount()
         {
-            if (!string.IsNullOrEmpty(this.PrivateKey))
+            if (!string.IsNullOrWhiteSpace(this.PrivateKey))
             {
-                this.accountService.RestoreAccountByKey(this.PrivateKey, this.RestoreAccountPassword);
+                try
+                {
+                    this.accountService.RestoreAccountByKey(this.PrivateKey, this.RestoreAccountPassword);
+                    this.RestoreError = null;
+                }
+                catch
+                {
+                    this.RestoreError = "Invalid private key";
+                }                
+            }
+            else if (!string.IsNullOrWhiteSpace(this.Mnemonic))
+            {
+                try
+                {
+                    this.accountService.RestoreAccountByMnemonic(this.Mnemonic, this.RestoreAccountPassword);
+                    this.RestoreError = null;
+                }
+                catch
+                {
+                    this.RestoreError = "Invalid mnemonic phrase";
+                }                
             }
             else
             {
-                this.accountService.RestoreAccountByMnemonic(this.Mnemonic, this.RestoreAccountPassword);
+                this.RestoreError = "Please fill the private key or the mnemonic";
             }
 
-            this.web3Service.Initialize(this.accountService.Account);
-            await this.NavigationService.NavigateToMainAsync();
+            if (this.RestoreError == null)
+            {
+                this.web3Service.Initialize(this.accountService.Account);
+                await this.NavigationService.NavigateToMainAsync();
+            }            
         }
     }
 }
