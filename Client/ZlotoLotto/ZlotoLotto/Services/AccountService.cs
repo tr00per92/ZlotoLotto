@@ -1,4 +1,5 @@
-﻿using NBitcoin;
+﻿using System.Threading.Tasks;
+using NBitcoin;
 using Nethereum.HdWallet;
 using Nethereum.Hex.HexConvertors.Extensions;
 using Nethereum.KeyStore;
@@ -11,31 +12,39 @@ namespace ZlotoLotto.Services
     {
         public Account Account { get; private set; }
 
-        public NewAccountModel CreateNew(string password)
+        public Task<NewAccountModel> CreateNew(string password)
         {
-            var newWallet = new Wallet(Wordlist.English, WordCount.Twelve);
-            var privateKey = newWallet.GetAccount(0).PrivateKey;
-            this.RestoreAccountByKey(privateKey, password);
-
-            return new NewAccountModel { PrivateKey = privateKey, Mnemonic = string.Join(" ", newWallet.Words) };
+            return Task.Run(async () =>
+            {
+                var newWallet = new Wallet(Wordlist.English, WordCount.Twelve);
+                var privateKey = newWallet.GetAccount(0).PrivateKey;
+                await this.RestoreAccountByKey(privateKey, password);
+                return new NewAccountModel { PrivateKey = privateKey, Mnemonic = string.Join(" ", newWallet.Words) };
+            });
         }
 
-        public void UnlockAccount(string password)
+        public Task UnlockAccount(string password)
         {
-            this.Account = Account.LoadFromKeyStore(Settings.KeyStore, password);
+            return Task.Run(() => this.Account = Account.LoadFromKeyStore(Settings.KeyStore, password));
         }
 
-        public void RestoreAccountByMnemonic(string mnemonic, string newPassword)
+        public Task RestoreAccountByMnemonic(string mnemonic, string newPassword)
         {
-            var privateKey = new Wallet(mnemonic, null).GetAccount(0).PrivateKey;
-            this.RestoreAccountByKey(privateKey, newPassword);
+            return Task.Run(async () =>
+            {
+                var privateKey = new Wallet(mnemonic, null).GetAccount(0).PrivateKey;
+                await this.RestoreAccountByKey(privateKey, newPassword);
+            });
         }
 
-        public void RestoreAccountByKey(string privateKey, string newPassword)
+        public Task RestoreAccountByKey(string privateKey, string newPassword)
         {
-            this.Account = new Account(privateKey);
-            var json = new KeyStoreService().EncryptAndGenerateDefaultKeyStoreAsJson(newPassword, privateKey.HexToByteArray(), this.Account.Address);
-            Settings.KeyStore = json;
+            return Task.Run(() =>
+            {
+                this.Account = new Account(privateKey);
+                var json = new KeyStoreService().EncryptAndGenerateDefaultKeyStoreAsJson(newPassword, privateKey.HexToByteArray(), this.Account.Address);
+                Settings.KeyStore = json;
+            });
         }
     }
 }

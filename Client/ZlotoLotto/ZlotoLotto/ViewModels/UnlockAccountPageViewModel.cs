@@ -17,29 +17,41 @@ namespace ZlotoLotto.ViewModels
             this.accountService = accountService;
             this.web3Service = web3Service;
             this.Title = "Unlock Account";
-            this.UnlockAccountCommand = new DelegateCommand(this.UnlockAccount);
+            this.UnlockAccountCommand = new DelegateCommand(this.UnlockAccount, this.CanUnlockAccount);
         }
 
         private string accountPassword;
         public string AccountPassword
         {
             get => this.accountPassword;
-            set => this.SetProperty(ref this.accountPassword, value);
+            set
+            {
+                this.SetProperty(ref this.accountPassword, value);
+                this.UnlockAccountCommand.RaiseCanExecuteChanged();
+            }
         }
 
-        public ICommand UnlockAccountCommand { get; }
+        public DelegateCommand UnlockAccountCommand { get; }
         private async void UnlockAccount()
         {
+            this.IsBusy = true;
             try
             {
-                this.accountService.UnlockAccount(this.accountPassword);
+                await this.accountService.UnlockAccount(this.accountPassword);
                 this.web3Service.Initialize(this.accountService.Account);
                 await this.NavigationService.NavigateToMainAsync();
             }
             catch
             {
                 this.HasError = true;
-            }            
+                this.AccountPassword = null;
+            }
+
+            this.IsBusy = false;
+        }
+        private bool CanUnlockAccount()
+        {
+            return !string.IsNullOrWhiteSpace(this.AccountPassword);
         }
     }
 }

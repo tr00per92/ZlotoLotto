@@ -6,13 +6,22 @@
 
     <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" WidthRequest="340">
         <Entry Placeholder="Select Password" Text="{Binding NewAccountPassword}" IsPassword="True" />
-        <Button Text="Create New Account" Command="{Binding CreateAccountCommand}" />
+        <Grid BackgroundColor="Aquamarine" HeightRequest="28">
+            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" />
+            <Label Text="Create New Account" HorizontalOptions="Center" VerticalOptions="Center" IsVisible="{Binding IsBusy, Converter={StaticResource NegateConverter}}" />
+            <Button Command="{Binding CreateAccountCommand}" BackgroundColor="Transparent" TextColor="Transparent" />
+        </Grid>
         <BoxView />
         <BoxView />
+        
         <Entry Placeholder="Enter your 12 word phrase" Text="{Binding Mnemonic}" />
         <Entry Placeholder="Or enter your private key" Text="{Binding PrivateKey}" />
-        <Entry Placeholder="Select Password" Text="{Binding RestoreAccountPassword}" IsPassword="True" />       
-        <Button Text="Restore Account" Command="{Binding RestoreAccountCommand}" />
+        <Entry Placeholder="Select Password" Text="{Binding RestoreAccountPassword}" IsPassword="True" />
+        <Grid BackgroundColor="Aquamarine" HeightRequest="28">
+            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" />
+            <Label Text="Restore Account" HorizontalOptions="Center" VerticalOptions="Center" IsVisible="{Binding IsBusy, Converter={StaticResource NegateConverter}}" />
+            <Button Command="{Binding RestoreAccountCommand}" BackgroundColor="Transparent" TextColor="Transparent" />
+        </Grid>
         <Label TextColor="Red" Text="{Binding Message}" HorizontalOptions="Center" />
     </StackLayout>
 </ContentPage>

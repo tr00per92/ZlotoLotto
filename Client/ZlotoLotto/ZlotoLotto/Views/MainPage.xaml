@@ -4,7 +4,7 @@
              x:Class="ZlotoLotto.Views.MainPage"
              Title="{Binding Title}">
 
-    <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" WidthRequest="340">
+    <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" WidthRequest="350">
         <Label TextColor="Green" FontSize="20" Text="{Binding Message}" HorizontalOptions="Center" XAlign="Center" />
         <Label TextColor="Red" FontSize="20" Text="An error occured. Try again." HorizontalOptions="Center" IsVisible="{Binding HasError}" />
         <BoxView />
@@ -12,7 +12,7 @@
         
         <Label Text="Your Ropsten address is: " HorizontalOptions="Center" />
         <Label Text="{Binding Address}" />
-        <Button Text="Open address in browser" Command="{Binding OpenAddressCommand}" />
+        <Button Text="Open address in browser" Command="{Binding OpenAddressCommand}" BackgroundColor="Aquamarine" />
         <BoxView />
         <BoxView />
         <Label Text="{Binding TokensCount, StringFormat='Your have {0} zloto lotto tickets'}" HorizontalOptions="Center" />
@@ -22,8 +22,8 @@
             <Label Text="Scratch ticket" HorizontalOptions="Center" VerticalOptions="Center" IsVisible="{Binding IsBusy, Converter={StaticResource NegateConverter}}" />
             <Button Command="{Binding ScratchCommand}" BackgroundColor="Transparent" TextColor="Transparent" />
         </Grid>
-        
-        <Button Text="Exchange tickets" Command="{Binding GoToExchangeCommand}" />
+
+        <Button Text="Exchange tickets" Command="{Binding GoToExchangeCommand}" BackgroundColor="Aquamarine" />
     </StackLayout>
 </ContentPage>
     

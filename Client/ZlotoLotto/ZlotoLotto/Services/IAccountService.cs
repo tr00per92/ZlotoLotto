@@ -1,4 +1,5 @@
-﻿using Nethereum.Web3.Accounts;
+﻿using System.Threading.Tasks;
+using Nethereum.Web3.Accounts;
 using ZlotoLotto.Models;
 
 namespace ZlotoLotto.Services
@@ -7,12 +8,12 @@ namespace ZlotoLotto.Services
     {
         Account Account { get; }
 
-        NewAccountModel CreateNew(string password);
+        Task<NewAccountModel> CreateNew(string password);
 
-        void UnlockAccount(string password);
+        Task UnlockAccount(string password);
 
-        void RestoreAccountByMnemonic(string mnemonic, string newPassword);
+        Task RestoreAccountByMnemonic(string mnemonic, string newPassword);
 
-        void RestoreAccountByKey(string privateKey, string newPassword);
+        Task RestoreAccountByKey(string privateKey, string newPassword);
     }
 }

@@ -15,9 +15,6 @@
             <Style TargetType="NavigationPage">
                 <Setter Property="BarBackgroundColor" Value="Aquamarine" />
             </Style>
-            <Style TargetType="Button">
-                <Setter Property="BackgroundColor" Value="Aquamarine" />
-            </Style>
             <Style TargetType="ActivityIndicator">
                 <Setter Property="Color" Value="Black" />
             </Style>

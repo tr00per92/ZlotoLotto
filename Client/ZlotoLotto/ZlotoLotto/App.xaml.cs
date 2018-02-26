@@ -19,7 +19,7 @@ namespace ZlotoLotto
         {
             this.InitializeComponent();
             var startPage = Settings.KeyStore == null ? nameof(CreateAccountPage) : nameof(UnlockAccountPage);
-            await this.NavigationService.NavigateAsync($"{nameof(NavigationPage)}/{startPage}");
+            await this.NavigationService.NavigateAsync(startPage);
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
