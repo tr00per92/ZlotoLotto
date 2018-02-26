@@ -4,20 +4,35 @@
              x:Class="ZlotoLotto.Views.ExchangeTokensPage"
              Title="{Binding Title}">
 
-    <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+    <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" WidthRequest="340">
+        <Label TextColor="Green" FontSize="20" Text="{Binding Message}" HorizontalOptions="Center" />
+        <Label TextColor="Red" FontSize="20" Text="An error occured. Try again." HorizontalOptions="Center" IsVisible="{Binding HasError}" />
+        <BoxView />
+        <BoxView />
+        
         <Label Text="{Binding Balance, StringFormat='Your ether balance is {0:0.00}'}" />
         <Label Text="{Binding TokensCount, StringFormat='Your have {0} zloto lotto tickets'}" />
         <Label Text="{Binding CurrentPrice, StringFormat='Current ticket price is {0}'}" />
         <BoxView />
         <BoxView />
+        
         <Label Text="Buy tickets:" />
         <Entry Placeholder="Amount" Keyboard="Numeric" Text="{Binding BuyTokensCount}" />
-        <Label Text="{Binding BuyTotalPrice, StringFormat='Total price: {0} ether'}" />
-        <Button Text="Buy" Command="{Binding BuyTokensCommand}" BackgroundColor="YellowGreen" />
+        <Label Text="{Binding BuyTotalPrice, StringFormat='Total price: {0} ether'}" />      
+        <Grid BackgroundColor="YellowGreen" HeightRequest="28">
+            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" />
+            <Label Text="Buy" HorizontalOptions="Center" VerticalOptions="Center" IsVisible="{Binding IsBusy, Converter={StaticResource NegateConverter}}" />
+            <Button Command="{Binding BuyTokensCommand}" BackgroundColor="Transparent" TextColor="Transparent" />
+        </Grid>
+        
         <Label Text="Sell tickets:" />
         <Entry Placeholder="Amount" Keyboard="Numeric" Text="{Binding SellTokensCount}" />
         <Label Text="{Binding SellTotalPrice, StringFormat='Total price: {0} ether'}" />
-        <Button Text="Sell" Command="{Binding SellTokensCommand}" BackgroundColor="Red" />
+        <Grid BackgroundColor="Red" HeightRequest="28">
+            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" />
+            <Label Text="Sell" HorizontalOptions="Center" VerticalOptions="Center" IsVisible="{Binding IsBusy, Converter={StaticResource NegateConverter}}" />
+            <Button Command="{Binding SellTokensCommand}" BackgroundColor="Transparent" TextColor="Transparent" />
+        </Grid>
     </StackLayout>
 </ContentPage>
     

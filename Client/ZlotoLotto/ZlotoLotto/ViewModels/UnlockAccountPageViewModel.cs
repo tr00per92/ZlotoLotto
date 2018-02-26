@@ -27,13 +27,6 @@ namespace ZlotoLotto.ViewModels
             set => this.SetProperty(ref this.accountPassword, value);
         }
 
-        private bool passwordError;
-        public bool PasswordError
-        {
-            get => this.passwordError;
-            set => this.SetProperty(ref this.passwordError, value);
-        }
-
         public ICommand UnlockAccountCommand { get; }
         private async void UnlockAccount()
         {
@@ -45,7 +38,7 @@ namespace ZlotoLotto.ViewModels
             }
             catch
             {
-                this.PasswordError = true;
+                this.HasError = true;
             }            
         }
     }

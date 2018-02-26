@@ -1,5 +1,4 @@
-﻿using System.Windows.Input;
-using Prism.Commands;
+﻿using Prism.Commands;
 using Prism.Navigation;
 using ZlotoLotto.Services;
 
@@ -13,10 +12,9 @@ namespace ZlotoLotto.ViewModels
             : base(navigationService)
         {
             this.web3Service = web3Service;
-            this.Title = "Exchange tickets";
-            this.Refresh();
-            this.BuyTokensCommand = new DelegateCommand(this.BuyTokens);
-            this.SellTokensCommand = new DelegateCommand(this.SellTokens);
+            this.Title = "Exchange tickets";            
+            this.BuyTokensCommand = new DelegateCommand(this.BuyTokens, this.CanBuyTokens);
+            this.SellTokensCommand = new DelegateCommand(this.SellTokens, this.CanSellTokens);
         }
 
         private void Refresh()
@@ -26,21 +24,55 @@ namespace ZlotoLotto.ViewModels
             this.UpdateBalance();
         }
 
-        public ICommand BuyTokensCommand { get; }
+        public DelegateCommand BuyTokensCommand { get; }
         private async void BuyTokens()
         {
-            await this.web3Service.BuyTokens(this.BuyTokensCount, this.BuyTotalPrice);
+            this.Message = null;
+            this.HasError = false;
+            this.IsBusy = true;
+            try
+            {
+                await this.web3Service.BuyTokens(this.BuyTokensCount, this.BuyTotalPrice);
+                this.Message = $"Successfully bought {this.BuyTokensCount} tickets.";
+                this.BuyTokensCount = 0;
+            }
+            catch
+            {
+                this.HasError = true;
+            }
+            
             this.Refresh();
-            this.BuyTokensCount = 0;
+            this.IsBusy = false;
+        }
+        private bool CanBuyTokens()
+        {
+            return !this.IsBusy && this.BuyTokensCount != 0;
         }
 
-        public ICommand SellTokensCommand { get; }
+        public DelegateCommand SellTokensCommand { get; }
         private async void SellTokens()
         {
-            await this.web3Service.SellTokens(this.SellTokensCount);
+            this.Message = null;
+            this.HasError = false;
+            this.IsBusy = true;
+            try
+            {
+                await this.web3Service.SellTokens(this.SellTokensCount);
+                this.Message = $"Successfully sold {this.SellTokensCount} tickets.";
+                this.SellTokensCount = 0;
+            }
+            catch
+            {
+                this.HasError = true;
+            }
+            
             this.Refresh();
-            this.SellTokensCount = 0;
-        }
+            this.IsBusy = false;
+        }    
+        private bool CanSellTokens()
+        {
+            return !this.IsBusy && this.SellTokensCount != 0;
+        }        
 
         private int buyTokensCount;
         public int BuyTokensCount
@@ -50,6 +82,7 @@ namespace ZlotoLotto.ViewModels
             {
                 this.SetProperty(ref this.buyTokensCount, value);
                 this.RaisePropertyChanged(nameof(this.BuyTotalPrice));
+                this.BuyTokensCommand.RaiseCanExecuteChanged();
             }
         }
         public decimal BuyTotalPrice => this.BuyTokensCount * this.CurrentPrice;
@@ -62,6 +95,7 @@ namespace ZlotoLotto.ViewModels
             {
                 this.SetProperty(ref this.sellTokensCount, value);
                 this.RaisePropertyChanged(nameof(this.SellTotalPrice));
+                this.SellTokensCommand.RaiseCanExecuteChanged();
             }
         }
         public decimal SellTotalPrice => this.SellTokensCount * this.CurrentPrice;
@@ -97,6 +131,17 @@ namespace ZlotoLotto.ViewModels
         private async void UpdateBalance()
         {
             this.Balance = await this.web3Service.GetBalance();
+        }
+
+        protected override void RaiseCommandsCanExecuteChanged()
+        {
+            this.BuyTokensCommand.RaiseCanExecuteChanged();
+            this.SellTokensCommand.RaiseCanExecuteChanged();
+        }
+
+        public override void OnNavigatedTo(NavigationParameters parameters)
+        {
+            this.Refresh();
         }
     }
 }

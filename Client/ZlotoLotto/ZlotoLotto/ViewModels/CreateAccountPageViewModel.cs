@@ -2,7 +2,6 @@
 using Prism.Commands;
 using Prism.Navigation;
 using ZlotoLotto.Services;
-using ZlotoLotto.Views;
 
 namespace ZlotoLotto.ViewModels
 {
@@ -48,14 +47,7 @@ namespace ZlotoLotto.ViewModels
             get => this.mnemonic;
             set => this.SetProperty(ref this.mnemonic, value);
         }
-
-        private string restoreError;
-        public string RestoreError
-        {
-            get => this.restoreError;
-            set => this.SetProperty(ref this.restoreError, value);
-        }
-
+        
         public ICommand CreateAccountCommand { get; }
         private async void CreateAccount()
         {
@@ -72,11 +64,11 @@ namespace ZlotoLotto.ViewModels
                 try
                 {
                     this.accountService.RestoreAccountByKey(this.PrivateKey, this.RestoreAccountPassword);
-                    this.RestoreError = null;
+                    this.Message = null;
                 }
                 catch
                 {
-                    this.RestoreError = "Invalid private key";
+                    this.Message = "Invalid private key";
                 }                
             }
             else if (!string.IsNullOrWhiteSpace(this.Mnemonic))
@@ -84,19 +76,19 @@ namespace ZlotoLotto.ViewModels
                 try
                 {
                     this.accountService.RestoreAccountByMnemonic(this.Mnemonic, this.RestoreAccountPassword);
-                    this.RestoreError = null;
+                    this.Message = null;
                 }
                 catch
                 {
-                    this.RestoreError = "Invalid mnemonic phrase";
+                    this.Message = "Invalid mnemonic phrase";
                 }                
             }
             else
             {
-                this.RestoreError = "Please fill the private key or the mnemonic";
+                this.Message = "Please fill the private key or the mnemonic";
             }
 
-            if (this.RestoreError == null)
+            if (this.Message == null)
             {
                 this.web3Service.Initialize(this.accountService.Account);
                 await this.NavigationService.NavigateToMainAsync();

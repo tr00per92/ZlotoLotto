@@ -4,7 +4,7 @@
              x:Class="ZlotoLotto.Views.CreateAccountPage"
              Title="{Binding Title}">
 
-    <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" WidthRequest="300">
+    <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" WidthRequest="340">
         <Entry Placeholder="Select Password" Text="{Binding NewAccountPassword}" IsPassword="True" />
         <Button Text="Create New Account" Command="{Binding CreateAccountCommand}" />
         <BoxView />
@@ -13,7 +13,7 @@
         <Entry Placeholder="Or enter your private key" Text="{Binding PrivateKey}" />
         <Entry Placeholder="Select Password" Text="{Binding RestoreAccountPassword}" IsPassword="True" />       
         <Button Text="Restore Account" Command="{Binding RestoreAccountCommand}" />
-        <Label TextColor="Red" Text="{Binding RestoreError}" HorizontalOptions="Center" />
+        <Label TextColor="Red" Text="{Binding Message}" HorizontalOptions="Center" />
     </StackLayout>
 </ContentPage>
     

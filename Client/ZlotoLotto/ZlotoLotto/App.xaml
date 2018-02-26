@@ -1,21 +1,27 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <prism:PrismApplication xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:prism="clr-namespace:Prism.Autofac;assembly=Prism.Autofac.Forms"
+             xmlns:converters="clr-namespace:ZlotoLotto.Views.Converters;assembly=ZlotoLotto"
+             xmlns:prism="clr-namespace:Prism.Autofac;assembly=Prism.Autofac.Forms"                        
              x:Class="ZlotoLotto.App">
     
 	<Application.Resources>
         <ResourceDictionary>
+            <converters:NegateConverter x:Key="NegateConverter" />
+            
             <Style TargetType="ContentPage" ApplyToDerivedTypes="True">
                 <Setter Property="BackgroundColor" Value="LightBlue" />
             </Style>
-            <Style TargetType="NavigationPage" ApplyToDerivedTypes="True">
+            <Style TargetType="NavigationPage">
                 <Setter Property="BarBackgroundColor" Value="Aquamarine" />
             </Style>
-            <Style TargetType="Button" ApplyToDerivedTypes="True">
+            <Style TargetType="Button">
                 <Setter Property="BackgroundColor" Value="Aquamarine" />
             </Style>
-            <Style TargetType="BoxView" ApplyToDerivedTypes="True">
+            <Style TargetType="ActivityIndicator">
+                <Setter Property="Color" Value="Black" />
+            </Style>
+            <Style TargetType="BoxView">
                 <Setter Property="BackgroundColor" Value="Aquamarine" />
                 <Setter Property="HeightRequest" Value="2" />
             </Style>

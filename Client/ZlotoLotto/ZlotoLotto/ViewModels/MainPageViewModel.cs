@@ -3,6 +3,7 @@ using System.Windows.Input;
 using Prism.Commands;
 using Prism.Navigation;
 using Xamarin.Forms;
+using ZlotoLotto.Models;
 using ZlotoLotto.Services;
 using ZlotoLotto.Views;
 
@@ -18,17 +19,47 @@ namespace ZlotoLotto.ViewModels
             this.web3Service = web3Service;
             this.Title = "Zloto Lotto";
             this.Address = this.web3Service.Address;
-            this.ScratchCommand = new DelegateCommand(this.Scratch);
+            this.ScratchCommand = new DelegateCommand(this.Scratch, this.CanScratch);
             this.OpenAddressCommand = new DelegateCommand(this.OpeAddress);
-            this.GoToExchangeCommand = new DelegateCommand(this.GoToExchange);
-            this.UpdateTokensCount();
+            this.GoToExchangeCommand = new DelegateCommand(this.GoToExchange);            
         }
 
-        public ICommand ScratchCommand { get; }
+        public DelegateCommand ScratchCommand { get; }
         private async void Scratch()
         {
-            var result = await this.web3Service.ScratchToken();
+            this.IsBusy = true;
+            this.Message = null;
+            try
+            {
+                this.TokensCount--;
+                var result = await this.web3Service.ScratchToken();
+                switch (result)
+                {
+                    case ScratchResult.Lose:
+                        this.Message = "You lose this time, but every second ticket wins. Try again.";
+                        break;
+                    case ScratchResult.WinOne:
+                        this.Message = "Congratulations. You won a ticket.";
+                        break;
+                    case ScratchResult.WinTwo:
+                    case ScratchResult.WinFour:
+                        this.Message = $"Congratulations. You won {(int)result} tickets.";
+                        break;
+                    default:
+                        throw new NotSupportedException();
+                }
+            }
+            catch
+            {
+                this.HasError = true;
+            }
+            
             this.UpdateTokensCount();
+            this.IsBusy = false;
+        }
+        private bool CanScratch()
+        {
+            return !this.IsBusy;
         }
 
         public ICommand OpenAddressCommand { get; }
@@ -59,6 +90,16 @@ namespace ZlotoLotto.ViewModels
         private async void UpdateTokensCount()
         {
             this.TokensCount = await this.web3Service.GetTokensCount();
+        }
+
+        protected override void RaiseCommandsCanExecuteChanged()
+        {
+            this.ScratchCommand.RaiseCanExecuteChanged();
+        }
+
+        public override void OnNavigatedTo(NavigationParameters parameters)
+        {
+            this.UpdateTokensCount();
         }
     }
 }

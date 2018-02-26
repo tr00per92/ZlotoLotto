@@ -1,46 +1,67 @@
-﻿using Prism.Commands;
-using Prism.Mvvm;
+﻿using Prism.Mvvm;
 using Prism.Navigation;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ZlotoLotto.ViewModels
 {
-    public class ViewModelBase : BindableBase, INavigationAware, IDestructible
+    public abstract class ViewModelBase : BindableBase, INavigationAware, IDestructible
     {
-        protected INavigationService NavigationService { get; private set; }
-
-        private string _title;
-        public string Title
+        protected ViewModelBase(INavigationService navigationService)
         {
-            get { return _title; }
-            set { SetProperty(ref _title, value); }
+            this.NavigationService = navigationService;
         }
 
-        public ViewModelBase(INavigationService navigationService)
+        protected INavigationService NavigationService { get; }
+
+        private string title;
+        public string Title
         {
-            NavigationService = navigationService;
+            get => this.title;
+            set => this.SetProperty(ref this.title, value);
+        }
+
+        private bool isBusy;
+        public bool IsBusy
+        {
+            get => this.isBusy;
+            set
+            {
+                this.SetProperty(ref this.isBusy, value);
+                this.RaiseCommandsCanExecuteChanged();
+            }
+        }
+
+        private string message;
+        public string Message
+        {
+            get => this.message;
+            set => this.SetProperty(ref this.message, value);
+        }
+
+        private bool hasError;
+        public bool HasError
+        {
+            get => this.hasError;
+            set => this.SetProperty(ref this.hasError, value);
         }
 
         public virtual void OnNavigatedFrom(NavigationParameters parameters)
         {
-            
         }
 
         public virtual void OnNavigatedTo(NavigationParameters parameters)
         {
-            
         }
 
         public virtual void OnNavigatingTo(NavigationParameters parameters)
         {
-            
         }
 
         public virtual void Destroy()
         {
-            
+        }
+
+        protected virtual void RaiseCommandsCanExecuteChanged()
+        {
         }
     }
 }

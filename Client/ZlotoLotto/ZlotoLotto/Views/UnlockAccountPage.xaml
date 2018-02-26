@@ -6,7 +6,7 @@
 
     <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" WidthRequest="200">
         <Entry Placeholder="Enter Password" Text="{Binding AccountPassword}" IsPassword="True" />
-        <Label Text="The password is incorrect" IsVisible="{Binding PasswordError}" TextColor="Red" HorizontalOptions="Center" />
+        <Label Text="The password is incorrect" IsVisible="{Binding HasError}" TextColor="Red" HorizontalOptions="Center" />
         <Button Text="Unlock Account" Command="{Binding UnlockAccountCommand}" />
     </StackLayout>
 </ContentPage>
