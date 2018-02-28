@@ -4,7 +4,7 @@
              x:Class="ZlotoLotto.Views.CreateAccountPage"
              Title="{Binding Title}">
 
-    <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" WidthRequest="340">
+    <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" WidthRequest="350">
         <Entry Placeholder="Select Password" Text="{Binding NewAccountPassword}" IsPassword="True" />
         <Grid BackgroundColor="Aquamarine" HeightRequest="28">
             <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" />
@@ -22,7 +22,13 @@
             <Label Text="Restore Account" HorizontalOptions="Center" VerticalOptions="Center" IsVisible="{Binding IsBusy, Converter={StaticResource NegateConverter}}" />
             <Button Command="{Binding RestoreAccountCommand}" BackgroundColor="Transparent" TextColor="Transparent" />
         </Grid>
-        <Label TextColor="Red" Text="{Binding Message}" HorizontalOptions="Center" />
+        <BoxView />
+        <BoxView />
+        <Label TextColor="Red" Text="{Binding RestoreError}" HorizontalOptions="Center" />
+        <StackLayout IsVisible="{Binding Message, Converter={StaticResource NotNullConverter}}">
+            <Label TextColor="Green" Text="{Binding Message}" HorizontalOptions="Center" XAlign="Center" />
+            <Button Command="{Binding ContinueCommand}" BackgroundColor="Aquamarine" Text="Continue" />
+        </StackLayout>
     </StackLayout>
 </ContentPage>
     

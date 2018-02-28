@@ -15,8 +15,15 @@ namespace ZlotoLotto.ViewModels
             this.accountService = accountService;
             this.web3Service = web3Service;
             this.Title = "Create Account";
+            this.ContinueCommand = new DelegateCommand(this.Continue);
             this.CreateAccountCommand = new DelegateCommand(this.CreateAccount, this.CanCreateAccount);
             this.RestoreAccountCommand = new DelegateCommand(this.RestoreAccount, this.CanRestoreAccount);
+        }
+
+        public DelegateCommand ContinueCommand { get; }
+        private async void Continue()
+        {
+            await this.NavigationService.NavigateToMainAsync();
         }
 
         private string newAccountPassword;
@@ -63,14 +70,22 @@ namespace ZlotoLotto.ViewModels
             }
         }
 
+        private string restoreError;
+        public string RestoreError
+        {
+            get => this.restoreError;
+            set => this.SetProperty(ref this.restoreError, value);
+        }
+
         public DelegateCommand CreateAccountCommand { get; }
         private async void CreateAccount()
         {
             this.IsBusy = true;
             var newAccountData = await this.accountService.CreateNew(this.NewAccountPassword);
             this.web3Service.Initialize(this.accountService.Account);
-            await this.NavigationService.NavigateToMainAsync();
             this.IsBusy = false;
+            this.Message = $"Account created successfully. Your address is '{this.accountService.Account.Address}'. Please write down your private key '{newAccountData.PrivateKey}' and your mnemonic phrase '{newAccountData.Mnemonic}'";
+            this.NewAccountPassword = null;
         }
         private bool CanCreateAccount()
         {
@@ -80,6 +95,7 @@ namespace ZlotoLotto.ViewModels
         public DelegateCommand RestoreAccountCommand { get; }
         private async void RestoreAccount()
         {
+            this.RestoreError = null;
             this.Message = null;
             this.IsBusy = true;
             if (!string.IsNullOrWhiteSpace(this.PrivateKey))
@@ -90,7 +106,7 @@ namespace ZlotoLotto.ViewModels
                 }
                 catch
                 {
-                    this.Message = "Invalid private key";
+                    this.RestoreError = "Invalid private key";
                 }                
             }
             else
@@ -101,18 +117,20 @@ namespace ZlotoLotto.ViewModels
                 }
                 catch
                 {
-                    this.Message = "Invalid mnemonic phrase";
+                    this.RestoreError = "Invalid mnemonic phrase";
                 }                
             }
 
-            if (this.Message == null)
+            if (this.RestoreError == null)
             {
                 this.web3Service.Initialize(this.accountService.Account);
-                await this.NavigationService.NavigateToMainAsync();
+                this.Message = $"Account restored successfully. Your address is '{this.accountService.Account.Address}'.";
             }
 
-            this.RestoreAccountPassword = null;
             this.IsBusy = false;
+            this.RestoreAccountPassword = null;
+            this.Mnemonic = null;
+            this.PrivateKey = null;
         }
         private bool CanRestoreAccount()
         {
