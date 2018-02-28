@@ -10,7 +10,7 @@ namespace ZlotoLotto.Services
 
         Task<NewAccountModel> CreateNew(string password);
 
-        Task UnlockAccount(string password);
+        Task UnlockAccount(string keyStore, string password);
 
         Task RestoreAccountByMnemonic(string mnemonic, string newPassword);
 

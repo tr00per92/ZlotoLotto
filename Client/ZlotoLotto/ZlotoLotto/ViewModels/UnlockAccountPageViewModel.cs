@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Input;
 using Prism.Commands;
 using Prism.Navigation;
+using Xamarin.Forms;
 using ZlotoLotto.Services;
+using ZlotoLotto.Views;
 
 namespace ZlotoLotto.ViewModels
 {
@@ -18,7 +22,11 @@ namespace ZlotoLotto.ViewModels
             this.web3Service = web3Service;
             this.Title = "Unlock Account";
             this.UnlockAccountCommand = new DelegateCommand(this.UnlockAccount, this.CanUnlockAccount);
+            this.GoToCreateCommand = new DelegateCommand(this.GoToCreate);
         }
+
+        public IEnumerable<KeyValuePair<string, string>> Accounts { get; } = Settings.Accounts.ToList();
+        public KeyValuePair<string, string> SelectedAccount { get; set; } = Settings.Accounts.FirstOrDefault();
 
         private string accountPassword;
         public string AccountPassword
@@ -37,7 +45,7 @@ namespace ZlotoLotto.ViewModels
             this.IsBusy = true;
             try
             {
-                await this.accountService.UnlockAccount(this.accountPassword);
+                await this.accountService.UnlockAccount(this.SelectedAccount.Value, this.accountPassword);
                 this.web3Service.Initialize(this.accountService.Account);
                 await this.NavigationService.NavigateToMainAsync();
             }
@@ -52,6 +60,12 @@ namespace ZlotoLotto.ViewModels
         private bool CanUnlockAccount()
         {
             return !string.IsNullOrWhiteSpace(this.AccountPassword);
+        }
+
+        public DelegateCommand GoToCreateCommand { get; }
+        private async void GoToCreate()
+        {
+            await this.NavigationService.NavigateAsync($"{nameof(NavigationPage)}/{nameof(CreateAccountPage)}");
         }
     }
 }

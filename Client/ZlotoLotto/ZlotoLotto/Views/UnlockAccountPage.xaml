@@ -4,7 +4,8 @@
              x:Class="ZlotoLotto.Views.UnlockAccountPage"
              Title="{Binding Title}">
 
-    <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" WidthRequest="200">
+    <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" WidthRequest="400">
+        <Picker ItemsSource="{Binding Accounts}" ItemDisplayBinding="{Binding Key}" SelectedItem="{Binding SelectedAccount}" />
         <Entry Placeholder="Enter Password" Text="{Binding AccountPassword}" IsPassword="True" />
         <Label Text="The password is incorrect" IsVisible="{Binding HasError}" TextColor="Red" HorizontalOptions="Center" />
         <Grid BackgroundColor="Aquamarine" HeightRequest="28">
@@ -12,6 +13,9 @@
             <Label Text="Unlock Account" HorizontalOptions="Center" VerticalOptions="Center" IsVisible="{Binding IsBusy, Converter={StaticResource NegateConverter}}" />
             <Button Command="{Binding UnlockAccountCommand}" BackgroundColor="Transparent" TextColor="Transparent" />
         </Grid>
+        <BoxView />
+        <BoxView />
+        <Button Text="Add New Account" Command="{Binding GoToCreateCommand}" BackgroundColor="Aquamarine" />
     </StackLayout>
 </ContentPage>
     

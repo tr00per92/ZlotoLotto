@@ -23,9 +23,9 @@ namespace ZlotoLotto.Services
             });
         }
 
-        public Task UnlockAccount(string password)
+        public Task UnlockAccount(string keyStore, string password)
         {
-            return Task.Run(() => this.Account = Account.LoadFromKeyStore(Settings.KeyStore, password));
+            return Task.Run(() => this.Account = Account.LoadFromKeyStore(keyStore, password));
         }
 
         public Task RestoreAccountByMnemonic(string mnemonic, string newPassword)
@@ -43,7 +43,7 @@ namespace ZlotoLotto.Services
             {
                 this.Account = new Account(privateKey);
                 var json = new KeyStoreService().EncryptAndGenerateDefaultKeyStoreAsJson(newPassword, privateKey.HexToByteArray(), this.Account.Address);
-                Settings.KeyStore = json;
+                Settings.AddAccount(this.Account.Address, json);
             });
         }
     }

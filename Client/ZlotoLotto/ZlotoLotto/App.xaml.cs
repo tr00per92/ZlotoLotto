@@ -1,4 +1,5 @@
-﻿using Prism;
+﻿using System.Linq;
+using Prism;
 using Prism.Ioc;
 using ZlotoLotto.Views;
 using Xamarin.Forms.Xaml;
@@ -18,7 +19,7 @@ namespace ZlotoLotto
         protected override async void OnInitialized()
         {
             this.InitializeComponent();
-            var startPage = Settings.KeyStore == null ? nameof(CreateAccountPage) : nameof(UnlockAccountPage);
+            var startPage = Settings.Accounts.Any() ? nameof(UnlockAccountPage) : nameof(CreateAccountPage);
             await this.NavigationService.NavigateAsync(startPage);
         }
 
