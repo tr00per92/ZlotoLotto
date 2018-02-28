@@ -20,7 +20,7 @@ namespace ZlotoLotto.ViewModels
             this.Title = "Zloto Lotto";
             this.Address = this.web3Service.Address;
             this.ScratchCommand = new DelegateCommand(this.Scratch, this.CanScratch);
-            this.OpenAddressCommand = new DelegateCommand(this.OpeAddress);
+            this.OpenAddressCommand = new DelegateCommand(this.OpenAddress);
             this.GoToExchangeCommand = new DelegateCommand(this.GoToExchange);            
         }
 
@@ -29,6 +29,7 @@ namespace ZlotoLotto.ViewModels
         {
             this.IsBusy = true;
             this.Message = null;
+            this.HasError = false;
             try
             {
                 this.TokensCount--;
@@ -63,7 +64,7 @@ namespace ZlotoLotto.ViewModels
         }
 
         public ICommand OpenAddressCommand { get; }
-        private void OpeAddress()
+        private void OpenAddress()
         {
             Device.OpenUri(new Uri("https://ropsten.etherscan.io/address/" + this.Address));
         }

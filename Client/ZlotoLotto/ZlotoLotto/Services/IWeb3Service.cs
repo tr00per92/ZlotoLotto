@@ -21,5 +21,11 @@ namespace ZlotoLotto.Services
         Task SellTokens(int count);
 
         Task<ScratchResult> ScratchToken();
+
+        Task<decimal> GetContractBalance();
+
+        Task<decimal> GetContractMinimumBalance();
+
+        Task WithdrawBalance(decimal amount);
     }
 }

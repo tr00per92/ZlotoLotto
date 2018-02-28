@@ -73,6 +73,29 @@ namespace ZlotoLotto.Services
             return (ScratchResult)(await this.GetTokensCount() - count + 1);
         }
 
+        public async Task<decimal> GetContractBalance()
+        {
+            this.EnsureOwner();
+            var balance = await this.contract.GetFunction("getBalance").CallAsync<ulong>(this.Address, null, null);
+            return Web3.Convert.FromWei(balance);
+        }
+
+        public async Task<decimal> GetContractMinimumBalance()
+        {
+            this.EnsureOwner();
+            var minBalance = await this.contract.GetFunction("getMinimumBalance").CallAsync<ulong>(this.Address, null, null);
+            return Web3.Convert.FromWei(minBalance);
+        }
+
+        public async Task WithdrawBalance(decimal amount)
+        {
+            this.EnsureOwner();
+            var withdrawFunction = this.contract.GetFunction("withdraw");
+            var amountWei = Web3.Convert.ToWei(amount);
+            var gas = await withdrawFunction.EstimateGasAsync(this.Address, null, null, amountWei);
+            await withdrawFunction.SendTransactionAndWaitForReceiptAsync(this.GetTransactionInput(gas), null, amountWei);
+        }
+
         private TransactionInput GetTransactionInput(HexBigInteger gas, HexBigInteger value = null)
         {
             return new TransactionInput { Gas = gas, From = this.Address, GasPrice = new HexBigInteger(100000000000), Value = value };
@@ -83,6 +106,15 @@ namespace ZlotoLotto.Services
             if (!this.initialized)
             {
                 throw new InvalidOperationException("Web3Service is not initialized. Please call Initialize() method first.");
+            }
+        }
+
+        private void EnsureOwner()
+        {
+            this.EnsureInitialized();
+            if (!string.Equals(this.Address, Settings.OwnerAddress, StringComparison.OrdinalIgnoreCase))
+            {
+                throw new UnauthorizedAccessException();
             }
         }
     }

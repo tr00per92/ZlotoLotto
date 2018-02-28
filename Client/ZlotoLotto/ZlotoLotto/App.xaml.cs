@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Prism;
+﻿using Prism;
 using Prism.Ioc;
 using ZlotoLotto.Views;
 using Xamarin.Forms.Xaml;
@@ -19,8 +18,7 @@ namespace ZlotoLotto
         protected override async void OnInitialized()
         {
             this.InitializeComponent();
-            var startPage = Settings.Accounts.Any() ? nameof(UnlockAccountPage) : nameof(CreateAccountPage);
-            await this.NavigationService.NavigateAsync(startPage);
+            await this.NavigationService.NavigateToStartAsync();
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
@@ -30,6 +28,7 @@ namespace ZlotoLotto
             containerRegistry.RegisterForNavigation<UnlockAccountPage>();
             containerRegistry.RegisterForNavigation<MainPage>();
             containerRegistry.RegisterForNavigation<ExchangeTokensPage>();
+            containerRegistry.RegisterForNavigation<AdminPage>();
 
             containerRegistry.RegisterSingleton<IAccountService, AccountService>();
             containerRegistry.RegisterSingleton<IWeb3Service, Web3Service>();

@@ -43,11 +43,12 @@ namespace ZlotoLotto.ViewModels
         private async void UnlockAccount()
         {
             this.IsBusy = true;
+            this.HasError = false;
             try
             {
                 await this.accountService.UnlockAccount(this.SelectedAccount.Value, this.accountPassword);
                 this.web3Service.Initialize(this.accountService.Account);
-                await this.NavigationService.NavigateToMainAsync();
+                await this.NavigationService.NavigateToMainAsync(this.accountService.Account.Address);
             }
             catch
             {
@@ -62,7 +63,7 @@ namespace ZlotoLotto.ViewModels
             return !string.IsNullOrWhiteSpace(this.AccountPassword);
         }
 
-        public DelegateCommand GoToCreateCommand { get; }
+        public ICommand GoToCreateCommand { get; }
         private async void GoToCreate()
         {
             await this.NavigationService.NavigateAsync($"{nameof(NavigationPage)}/{nameof(CreateAccountPage)}");

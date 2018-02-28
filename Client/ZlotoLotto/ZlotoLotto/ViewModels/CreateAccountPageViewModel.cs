@@ -1,4 +1,5 @@
-﻿using Prism.Commands;
+﻿using System.Windows.Input;
+using Prism.Commands;
 using Prism.Navigation;
 using ZlotoLotto.Services;
 
@@ -20,10 +21,10 @@ namespace ZlotoLotto.ViewModels
             this.RestoreAccountCommand = new DelegateCommand(this.RestoreAccount, this.CanRestoreAccount);
         }
 
-        public DelegateCommand ContinueCommand { get; }
+        public ICommand ContinueCommand { get; }
         private async void Continue()
         {
-            await this.NavigationService.NavigateToMainAsync();
+            await this.NavigationService.NavigateToMainAsync(this.accountService.Account.Address);
         }
 
         private string newAccountPassword;
