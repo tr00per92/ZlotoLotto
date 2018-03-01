@@ -5,6 +5,11 @@
              Title="{Binding Title}">
 
     <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" WidthRequest="350">
+        <Label TextColor="Green" FontSize="20" Text="{Binding Message}" HorizontalOptions="Center" />
+        <Label TextColor="Red" FontSize="20" Text="An error occured. Try again." HorizontalOptions="Center" IsVisible="{Binding HasError}" />
+        <BoxView />
+        <BoxView />
+        
         <Label Text="{Binding AccountBalance, StringFormat='Your ether balance is {0:0.00}'}" />
         <BoxView />
         <BoxView />
@@ -20,6 +25,16 @@
             <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" />
             <Label Text="Withdraw" HorizontalOptions="Center" VerticalOptions="Center" IsVisible="{Binding IsBusy, Converter={StaticResource NegateConverter}}" />
             <Button Command="{Binding WithdrawCommand}" BackgroundColor="Transparent" TextColor="Transparent" />
+        </Grid>
+        <BoxView />
+        <BoxView />
+        
+        <Label Text="Deposit ether:" />
+        <Entry Placeholder="Amount" Keyboard="Numeric" Text="{Binding DepositAmount}" />
+        <Grid BackgroundColor="Aquamarine" HeightRequest="28">
+            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" />
+            <Label Text="Deposit" HorizontalOptions="Center" VerticalOptions="Center" IsVisible="{Binding IsBusy, Converter={StaticResource NegateConverter}}" />
+            <Button Command="{Binding DepositCommand}" BackgroundColor="Transparent" TextColor="Transparent" />
         </Grid>
     </StackLayout>
 </ContentPage>

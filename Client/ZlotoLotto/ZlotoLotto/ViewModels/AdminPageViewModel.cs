@@ -19,6 +19,7 @@ namespace ZlotoLotto.ViewModels
             this.web3Service = web3Service;
             this.Title = "Zloto Lotto Admin";        
             this.WithdrawCommand = new DelegateCommand(this.Withdraw, this.CanWithdraw);
+            this.DepositCommand = new DelegateCommand(this.Deposit, this.CanDeposit);
         }
 
         private void Refresh()
@@ -33,9 +34,11 @@ namespace ZlotoLotto.ViewModels
         {
             this.IsBusy = true;
             this.HasError = false;
+            this.Message = null;
             try
             {
                 await this.web3Service.WithdrawBalance(this.WithdrawAmount);
+                this.Message = $"Withdraw of {this.WithdrawAmount} ether successfull.";
                 this.WithdrawAmount = 0;
             }
             catch
@@ -51,6 +54,31 @@ namespace ZlotoLotto.ViewModels
             return !this.IsBusy && this.WithdrawAmount > 0 && this.WithdrawAmount <= this.AvailableForWithdraw;
         }
 
+        public DelegateCommand DepositCommand { get; }
+        private async void Deposit()
+        {
+            this.IsBusy = true;
+            this.HasError = false;
+            this.Message = null;
+            try
+            {
+                await this.web3Service.Deposit(this.DepositAmount);
+                this.Message = $"Deposit of {this.DepositAmount} ether successfull.";
+                this.DepositAmount = 0;
+            }
+            catch
+            {
+                this.HasError = true;
+            }
+
+            this.Refresh();
+            this.IsBusy = false;
+        }
+        private bool CanDeposit()
+        {
+            return !this.IsBusy && this.DepositAmount > 0 && this.DepositAmount <= this.AccountBalance;
+        }
+
         private decimal withdrawAmount;
         public decimal WithdrawAmount
         {
@@ -59,6 +87,17 @@ namespace ZlotoLotto.ViewModels
             {
                 this.SetProperty(ref this.withdrawAmount, value);
                 this.WithdrawCommand.RaiseCanExecuteChanged();
+            }
+        }
+
+        private decimal depositAmount;
+        public decimal DepositAmount
+        {
+            get => this.depositAmount;
+            set
+            {
+                this.SetProperty(ref this.depositAmount, value);
+                this.DepositCommand.RaiseCanExecuteChanged();
             }
         }
 
@@ -98,8 +137,13 @@ namespace ZlotoLotto.ViewModels
         public decimal AccountBalance
         {
             get => this.accountBalance;
-            set => this.SetProperty(ref this.accountBalance, value);
+            set
+            {
+                this.SetProperty(ref this.accountBalance, value);
+                this.DepositCommand.RaiseCanExecuteChanged();
+            }
         }
+
         private async void UpdateAccountBalance()
         {
             this.AccountBalance = await this.web3Service.GetBalance();
@@ -113,6 +157,7 @@ namespace ZlotoLotto.ViewModels
         protected override void RaiseCommandsCanExecuteChanged()
         {
             this.WithdrawCommand.RaiseCanExecuteChanged();
+            this.DepositCommand.RaiseCanExecuteChanged();
         }
     }
 }

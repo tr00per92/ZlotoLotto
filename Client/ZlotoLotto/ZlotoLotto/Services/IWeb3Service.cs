@@ -27,5 +27,7 @@ namespace ZlotoLotto.Services
         Task<decimal> GetContractMinimumBalance();
 
         Task WithdrawBalance(decimal amount);
+
+        Task Deposit(decimal amount);
     }
 }

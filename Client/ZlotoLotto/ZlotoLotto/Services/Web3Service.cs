@@ -96,6 +96,15 @@ namespace ZlotoLotto.Services
             await withdrawFunction.SendTransactionAndWaitForReceiptAsync(this.GetTransactionInput(gas), null, amountWei);
         }
 
+        public async Task Deposit(decimal amount)
+        {
+            this.EnsureOwner();
+            var depositFunction = this.contract.GetFunction("deposit");
+            var value = new HexBigInteger(Web3.Convert.ToWei(amount));
+            var gas = await depositFunction.EstimateGasAsync(this.Address, null, value);
+            await depositFunction.SendTransactionAndWaitForReceiptAsync(this.GetTransactionInput(gas, value));
+        }
+
         private TransactionInput GetTransactionInput(HexBigInteger gas, HexBigInteger value = null)
         {
             return new TransactionInput { Gas = gas, From = this.Address, GasPrice = new HexBigInteger(100000000000), Value = value };
